@@ -13,7 +13,8 @@
 
 // I/O
 #define MAGNETIC_SWITCH_PIN (WIOLTE_D38)
-#define READ_TIMES (10)
+// #define READ_TIMES (10)
+#define READ_TIMES (3)
 
 // DELAY TIME (ms)
 #define READ_MAGNETIC_SWITCH_INTERVAL (1000)
@@ -109,12 +110,12 @@ int read_magnetic_switch_state(int *trap_presence){
   for (int i = 0; i < READ_TIMES; i++){
     // attached:1(HIGH), unattached:0(LOW)
     if (*trap_presence == digitalRead(MAGNETIC_SWITCH_PIN)){
-      SerialUSB.println("%d", *trap_presence);
+      SerialUSB.println(*trap_presence);
       return 0;
     }
     delay(READ_MAGNETIC_SWITCH_INTERVAL);
   }
-  SerialUSB.println("%d", *trap_presence);
+  SerialUSB.println(*trap_presence);
   return 1;
 }
 
@@ -139,7 +140,7 @@ void loop() {
     if (read_magnetic_switch_state(&trap_presence)){
       send_message(SET_TRAP);
       trap_presence = 1;
-      interval = TRAPPED_INTERVAL * HOUR;
+      // interval = TRAPPED_INTERVAL * HOUR;
     }
   }
   delay(interval);
