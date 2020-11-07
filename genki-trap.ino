@@ -22,7 +22,7 @@
 
 // TRAP STATE
 #define SET_TRAP    (0)
-#define HEALTH_CHEK (1)
+#define HEALTH_CHECK (1)
 #define TRAPPED     (2)
 
 // MESSAGE
@@ -42,14 +42,14 @@ void enable_lte(){
   Wio.Init();
   Wio.PowerSupplyLTE(true);
   delay(LTE_INTERVAL);
-  if !Wio.TurnOnOrReset() return;
-  if !Wio.Activate(APN, USERNAME, PASSWORD) return;
+  if (!Wio.TurnOnOrReset()) return;
+  if (!Wio.Activate(APN, USERNAME, PASSWORD)) return;
   delay(LTE_INTERVAL);
 }
 
 void disable_lte(){
   delay(LTE_INTERVAL);
-  if !Wio.TurnOff() return;
+  if (!Wio.TurnOff()) return;
   delay(LTE_INTERVAL);
 }
 
@@ -58,23 +58,27 @@ void send_message(int state){
   char data[MESSAGE_BUFFER];
 
   enable_lte();
-  switch(state){
-    case 0:
+  switch (state){
+    case SET_TRAP:
       sprintf(data, MESSAGE_FOR_SET_TRAP);
-    case 1:
+      break;
+    case HEALTH_CHECK:
       sprintf(data, MESSAGE_FOR_HEALTH_CHECK);
-    case 2:
+      break;
+    case TRAPPED:
       sprintf(data, MESSAGE_FOR_TRAPPED);
+      break;
     default:
+      break;
   }
   Wio.HttpPost(WEBHOOK_URL, data, &response_code);
   disable_lte();
 }
 
 int read_magnetic_switch_state(int *trap_presence){
-  for(int i = 0; i < READ_TIMES; i++;){
+  for (int i = 0; i < READ_TIMES; i++){
     // attached:1(HIGH), unattached:0(LOW)
-    if (trap_presence == digitalRead(MAGNETIC_SWITCH_PIN) return 0;
+    if (*trap_presence == digitalRead(MAGNETIC_SWITCH_PIN)) return 0;
     delay(READ_MAGNETIC_SWITCH_INTERVAL);
   }
   return 1;
@@ -88,17 +92,17 @@ void loop() {
 
   if (trap_presence){
     // Trapped
-    if read_magnetic_switch_state(trap_presence){
+    if (read_magnetic_switch_state(&trap_presence)){
       send_message(TRAPPED);
       trap_presence = 0;
       interval = 0;
     }
     // Health check
-    else send_message(HEALTH_CHEK);
+    else send_message(HEALTH_CHECK);
   }
-  else{
+  else {
     // Set Trap
-    if read_magnetic_switch_state(trap_presence){
+    if (read_magnetic_switch_state(&trap_presence)){
       send_message(SET_TRAP);
       trap_presence = 1;
       interval = TRAPPED_INTERVAL * HOUR;
