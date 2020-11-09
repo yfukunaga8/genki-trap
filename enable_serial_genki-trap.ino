@@ -7,8 +7,8 @@
 #define PASSWORD          "4g"
 
 // IFTTT
-#define WEBHOOK_EVENTNAME "hoge"
-#define WEBHOOK_KEY       "huga"
+#define WEBHOOK_EVENTNAME "test01"
+#define WEBHOOK_KEY       "cMAYNfawFlAMVwHaJvrWJs"
 #define WEBHOOK_URL       "https://maker.ifttt.com/trigger/"WEBHOOK_EVENTNAME"/with/key/"WEBHOOK_KEY
 
 // I/O
@@ -130,7 +130,7 @@ void loop() {
     if (read_magnetic_switch_state(&trap_presence)){
       send_message(TRAPPED);
       trap_presence = 0;
-      interval = 0;
+      interval = READ_MAGNETIC_SWITCH_INTERVAL;
     }
     // Health check
     else send_message(HEALTH_CHECK);
