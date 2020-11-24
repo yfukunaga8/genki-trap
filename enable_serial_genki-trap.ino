@@ -8,7 +8,7 @@
 
 // IFTTT
 #define WEBHOOK_EVENTNAME "test01"
-#define WEBHOOK_KEY       "cMAYNfawFlAMVwHaJvrWJs"
+#define WEBHOOK_KEY       "Eqbfb5SBdqcg-5gb3XxRa"
 #define WEBHOOK_URL       "https://maker.ifttt.com/trigger/"WEBHOOK_EVENTNAME"/with/key/"WEBHOOK_KEY
 
 // I/O
